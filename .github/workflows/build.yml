@@ -8,11 +8,11 @@ on:
     inputs:
       tag:
         required: false
-        description: "aagedal/helium release tag (default: latest release)"
+        description: "aagedal/helium-neo release tag (default: latest release)"
         default: ""
       ref:
         required: false
-        description: "aagedal/helium ref to build (default: the release tag)"
+        description: "aagedal/helium-neo ref to build (default: the release tag)"
         default: ""
       publish:
         required: false
@@ -50,7 +50,7 @@ jobs:
           INPUT_REF: ${{ inputs.ref }}
         run: |
           set -euo pipefail
-          repo=aagedal/helium
+          repo=aagedal/helium-neo
           tag="${INPUT_TAG:-$(gh release view -R "$repo" --json tagName -q .tagName)}"
           build=true
           if [ "$GITHUB_EVENT_NAME" = schedule ] &&

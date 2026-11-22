@@ -3,10 +3,10 @@ description: Upload Linux packages to the Helium Neo release and update the Home
 
 inputs:
   tag:
-    description: "aagedal/helium release tag"
+    description: "aagedal/helium-neo release tag"
     required: true
   token:
-    description: "Token with contents write access to aagedal/helium and aagedal/homebrew-tap"
+    description: "Token with contents write access to aagedal/helium-neo and aagedal/homebrew-tap"
     required: true
 
 runs:
@@ -27,7 +27,7 @@ runs:
       run: |
         set -euo pipefail
         ls -la release/
-        gh release upload "$TAG" -R aagedal/helium --clobber release/*
+        gh release upload "$TAG" -R aagedal/helium-neo --clobber release/*
 
     - name: Update Homebrew cask
       shell: bash
