@@ -1,45 +1,91 @@
-name: Build Linux release
+name: Build Helium Neo for Linux
 on:
+  # Picks up new Helium Neo releases once a day and skips releases that
+  # already have Linux tarballs.
+  schedule:
+    - cron: "17 4 * * *"
   workflow_dispatch:
     inputs:
+      tag:
+        required: false
+        description: "aagedal/helium release tag (default: latest release)"
+        default: ""
+      ref:
+        required: false
+        description: "aagedal/helium ref to build (default: the release tag)"
+        default: ""
+      publish:
+        required: false
+        type: boolean
+        description: "Upload tarballs to the release and update the Homebrew cask"
+        default: true
       runner:
         required: false
         description: "Runner image to use"
         default: "ubuntu-latest"
-      do-release:
-        required: false
-        type: boolean
-        description: "Create a release after build is done"
-        default: false
+
+# A build takes longer than a day; queued scheduled runs then see the
+# uploaded tarballs and skip.
+concurrency:
+  group: linux-release
+  cancel-in-progress: false
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
+  check:
+    name: Find release to build
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.find.outputs.tag }}
+      ref: ${{ steps.find.outputs.ref }}
+      build: ${{ steps.find.outputs.build }}
+    steps:
+      - id: find
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_TAG: ${{ inputs.tag }}
+          INPUT_REF: ${{ inputs.ref }}
+        run: |
+          set -euo pipefail
+          repo=aagedal/helium
+          tag="${INPUT_TAG:-$(gh release view -R "$repo" --json tagName -q .tagName)}"
+          build=true
+          if [ "$GITHUB_EVENT_NAME" = schedule ] &&
+             gh release view "$tag" -R "$repo" --json assets -q '.assets[].name' |
+             grep -q -- '-linux-.*\.tar\.xz$'; then
+            build=false
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "ref=${INPUT_REF:-$tag}" >> "$GITHUB_OUTPUT"
+          echo "build=$build" >> "$GITHUB_OUTPUT"
+          echo "Release $tag, ref ${INPUT_REF:-$tag}, build $build" >> "$GITHUB_STEP_SUMMARY"
+
   build:
-    name: Build Helium binaries and AppImage
+    name: Build Helium Neo
+    needs: check
+    if: needs.check.outputs.build == 'true'
     strategy:
       matrix:
         arch: [arm64, x86_64]
       max-parallel: 2
       fail-fast: true
     uses: ./.github/workflows/build-steps.yml
-    secrets: inherit
     with:
       arch: ${{ matrix.arch }}
-      runs-on: ${{ inputs.runner }}
+      ref: ${{ needs.check.outputs.ref }}
+      runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
 
-  release:
-    name: Create release
+  publish:
+    name: Publish to release
     runs-on: ubuntu-latest
-    needs: build
-    if: ${{ inputs.do-release }}
+    needs: [check, build]
+    if: github.event_name == 'schedule' || inputs.publish
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 0
-          fetch-tags: true
       - uses: ./.github/actions/release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag: ${{ needs.check.outputs.tag }}
+          token: ${{ secrets.NEO_RELEASE_TOKEN }}

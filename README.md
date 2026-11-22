@@ -1,3 +1,19 @@
+# helium-linux for Helium Neo
+Linux builds and packaging for [Helium Neo](https://github.com/aagedal/helium),
+a fork of the [Helium Browser](https://github.com/imputnet/helium). This is a
+fork of [imputnet/helium-linux](https://github.com/imputnet/helium-linux); the
+upstream README follows below.
+
+The `Build Helium Neo for Linux` workflow checks daily for a new Helium Neo
+release, builds `arm64` and `x86_64` tarballs and AppImages, uploads them to
+that release, and fills in the Linux checksums of the `helium-neo` cask in
+[aagedal/homebrew-tap](https://github.com/aagedal/homebrew-tap). It needs a
+`NEO_RELEASE_TOKEN` secret with contents write access to `aagedal/helium` and
+`aagedal/homebrew-tap`. Run it manually to build a specific tag or ref.
+
+`scripts/neo-local.sh` runs the same steps for a local development build
+inside the builder container.
+
 # helium-linux
 Linux builds, packaging, and development tooling for the
 [Helium Browser](https://github.com/imputnet/helium).

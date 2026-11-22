@@ -44,7 +44,7 @@
      return name.value();
    }
 -  return "chromium-browser.desktop";
-+  return "helium.desktop";
++  return "helium-neo.desktop";
  #endif
  }
  #endif  // BUILDFLAG(IS_LINUX)
@@ -70,7 +70,7 @@
 -#else
 -  std::string data_dir_basename = "chromium";
 -#endif
-+  std::string data_dir_basename = "net.imput.helium";
++  std::string data_dir_basename = "no.aagedal.helium-neo";
    *result = config_dir.Append(data_dir_basename + GetChannelSuffixForDataDir());
    return true;
  }
@@ -81,7 +81,7 @@
  
  # Base name of the package.
 -PACKAGE="chromium-browser"
-+PACKAGE="helium"
++PACKAGE="helium-neo"
  
  # Filename of the main executable (for generating launcher scripts, etc.)
  PROGNAME=chrome
@@ -90,7 +90,7 @@
  
  # Display string for desktop menu/icon.
 -MENUNAME="Chromium Web Browser"
-+MENUNAME="Helium"
++MENUNAME="Helium Neo"
  
  # Brief package description.
  SHORTDESC="The web browser from the Chromium projects"
@@ -118,7 +118,7 @@
 +HELPURL="https://helium.computer/"
  
 -RDN="org.chromium.Chromium"
-+RDN="net.imput.helium"
++RDN="no.aagedal.helium-neo"
 --- a/media/audio/pulse/pulse_util.cc
 +++ b/media/audio/pulse/pulse_util.cc
 @@ -37,8 +37,8 @@ namespace {
@@ -127,8 +127,8 @@
  #else
 -constexpr char kBrowserDisplayName[] = "chromium-browser";
 -#define PRODUCT_STRING "Chromium"
-+constexpr char kBrowserDisplayName[] = "helium";
-+#define PRODUCT_STRING "Helium"
++constexpr char kBrowserDisplayName[] = "helium-neo";
++#define PRODUCT_STRING "Helium Neo"
  #endif
  
  #if defined(DLOPEN_PULSEAUDIO)
@@ -143,7 +143,7 @@
 -#else  // BUILDFLAG(CHROMIUM_BRANDING)
 -  return "chromium-browser";
 -#endif
-+  return "helium";
++  return "helium-neo";
  }
  
  bool GetExistingShortcutContents(base::Environment* env,

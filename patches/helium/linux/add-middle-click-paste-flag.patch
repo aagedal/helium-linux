@@ -19,7 +19,7 @@
 +    {helium::kMiddleClickPasteEnabledCommandLine, "Middle Click Paste",
 +     "Controls middle click paste functionality. Helium flag.", kOsLinux,
 +     FEATURE_VALUE_TYPE(features::kMiddleClickPasteEnabled)},
- #endif  // CHROME_BROWSER_HELIUM_FLAG_ENTRIES_H_
+     {"helium-webkit-streaming", "WebKit streaming windows (experimental)",
 --- a/chrome/browser/renderer_preferences_util.cc
 +++ b/chrome/browser/renderer_preferences_util.cc
 @@ -9,6 +9,7 @@

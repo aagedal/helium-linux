@@ -11,7 +11,7 @@ export LD_LIBRARY_PATH="${HERE}/usr/lib:$LD_LIBRARY_PATH"
 export CHROME_WRAPPER="${APPIMAGE:-$THIS}"
 export CHROME_VERSION_EXTRA=appimage
 
-AA_PROFILE_PATH=/etc/apparmor.d/helium-appimage
+AA_PROFILE_PATH=/etc/apparmor.d/helium-neo-appimage
 AA_SYSFS_USERNS_PATH=/proc/sys/kernel/apparmor_restrict_unprivileged_userns
 
 has_command() {
@@ -63,9 +63,9 @@ print_apparmor_profile() {
     echo 'abi <abi/4.0>,'
     echo 'include <tunables/global>'
     echo
-    echo 'profile helium-appimage "'"$APPIMAGE_ESC"'" flags=(default_allow) {'
+    echo 'profile helium-neo-appimage "'"$APPIMAGE_ESC"'" flags=(default_allow) {'
     echo '  userns,'
-    echo '  include if exists <local/helium-appimage>'
+    echo '  include if exists <local/helium-neo-appimage>'
     echo '}'
 }
 
@@ -82,4 +82,4 @@ if needs_apparmor_bootstrap && has_apparmor_prereqs; then
         APPARMOR_BOOTSTRAPPED=1 exec "$APPIMAGE"
 fi
 
-"${HERE}"/opt/helium/helium "$@"
+"${HERE}"/opt/helium-neo/helium "$@"
