@@ -58,10 +58,13 @@ jobs:
              grep -q -- '-linux-.*\.tar\.xz$'; then
             build=false
           fi
+          # Pin the commit so every build part checks out the same source.
+          ref="${INPUT_REF:-$tag}"
+          sha="$(gh api "repos/$repo/commits/$ref" --jq .sha)"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
-          echo "ref=${INPUT_REF:-$tag}" >> "$GITHUB_OUTPUT"
+          echo "ref=$sha" >> "$GITHUB_OUTPUT"
           echo "build=$build" >> "$GITHUB_OUTPUT"
-          echo "Release $tag, ref ${INPUT_REF:-$tag}, build $build" >> "$GITHUB_STEP_SUMMARY"
+          echo "Release $tag, ref $ref ($sha), build $build" >> "$GITHUB_STEP_SUMMARY"
 
   build:
     name: Build Helium Neo
