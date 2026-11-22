@@ -19,7 +19,10 @@ outputs:
 runs:
   using: composite
   steps:
+    # The prepare job built the image itself; downloading it right after the
+    # upload can fail with "Artifact not found".
     - name: Download Docker image
+      if: ${{ inputs.prepare-only != 'true' }}
       uses: actions/download-artifact@v4
       with:
         name: docker-image-${{ env.ARCH }}
