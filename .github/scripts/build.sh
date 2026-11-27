@@ -36,6 +36,10 @@ else
     rc=$?
     set -e
 
+    if command -v sccache >/dev/null 2>&1; then
+        sccache --show-stats || true
+    fi
+
     if [ "${_gha_final}" != "true" ] && [ "$rc" -eq 124 ]; then
         echo "Task timed out after ${_task_timeout}s; continuing in next run."
         echo "status=running" >> "$GITHUB_OUTPUT"

@@ -10,4 +10,5 @@ cd "$_base_dir"
 
 mkdir -p "$(dirname "$_cache_tar")"
 rm -rf "build/download_cache"
-tar -cf - "build" | zstd -f -T0 -3 -o "${_cache_tar}"
+# Use POSIX/PAX format to preserve nanosecond mtimes for Siso's .siso_fs_state.
+tar --format=posix -cf - "build" | zstd -f -T0 -3 -o "${_cache_tar}"

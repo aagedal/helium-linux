@@ -21,7 +21,7 @@ RUN apt-get -y install bison ca-certificates curl debhelper desktop-file-utils f
 RUN apt-get -y install git python3-pillow python3-requests rsync sudo vim
 
 # install sccache
-ARG SCCACHE_VERSION=0.10.0
+ARG SCCACHE_VERSION=0.20.1
 
 RUN curl --fail -Lo /tmp/sccache.tar.gz \
     https://github.com/mozilla/sccache/releases/download/v${SCCACHE_VERSION}/sccache-v${SCCACHE_VERSION}-x86_64-unknown-linux-musl.tar.gz
